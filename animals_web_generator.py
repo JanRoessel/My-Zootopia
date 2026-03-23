@@ -19,16 +19,17 @@ for dic in animals_data:
 with open("animals_template.html", "r") as file:
     html_content = file.read()
 
+
 animals_string = ""
 for animal in animals_data:
     animals_string += "<li class='cards__item'>"
     animals_string += f"<div class='card__title'>{animal['name']}</div>"
-    animals_string += "<div class='card__text'>"
-    animals_string += f"<p>Diet: {animal['characteristics']['diet']}</p>"
-    animals_string += f"<p>Location: {', '.join(animal['locations'])}</p>"
+    animals_string += "<p class='card__text'>"
+    animals_string += f"<strong>Diet:</strong> {animal['characteristics']['diet']}<br/>"
+    animals_string += f"<strong>Location:</strong> {', '.join(animal['locations'])}<br/>"
     if animal['characteristics'].get('type'):
-        animals_string += f"<p>Type: {animal['characteristics']['type']}</p>"
-    animals_string += "</div>"
+        animals_string += f"<strong>Type:</strong> {animal['characteristics']['type']}<br/>"
+    animals_string += "</p>"
     animals_string += "</li>"
 
 new_html = html_content.replace("__REPLACE_ANIMALS_INFO__", animals_string)
