@@ -21,6 +21,7 @@ def fetch_animals(animal_name):
     if response.status_code != 200:
         print("API Fehler:", response.status_code, response.text)
         return []
+
     return response.json()
 
 
@@ -63,9 +64,11 @@ def write_html(content, output_file="animals.html"):
 def main():
     animal_name = input(" Which animal are you looking for? ")
 
-    print("\nFetching from API...\n")
-
     animals = fetch_animals(animal_name)
+
+    if not animals:
+        print(f"No results found for '{animal_name}'. Please try another animal.")
+        return
 
     print(f"Found {len(animals)} result(s)\n")
 
@@ -78,8 +81,7 @@ def main():
 
     write_html(final_html)
 
-    print(" animals.html generated successfully")
-
+    print("animals.html generated successfully")
 
 if __name__ == "__main__":
     main()
