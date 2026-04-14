@@ -1,28 +1,4 @@
-import requests
-from dotenv import load_dotenv
-import os
-
-
-load_dotenv()
-
-API_KEY = os.getenv("API_KEY")
-API_URL = "https://api.api-ninjas.com/v1/animals?name="
-
-
-def fetch_animals(animal_name):
-    url = API_URL + animal_name
-
-    headers = {
-        "X-Api-Key": API_KEY
-    }
-
-    response = requests.get(url, headers=headers)
-
-    if response.status_code != 200:
-        print("API Fehler:", response.status_code, response.text)
-        return []
-
-    return response.json()
+from data_fetcher import fetch_data
 
 
 def serialize_animal(animal_obj):
@@ -46,10 +22,11 @@ def serialize_animal(animal_obj):
 
     html += '</p>\n'
     html += '</li>\n'
+
     return html
 
 
-def generate_animals_string(animals):
+def generate_html(animals):
     if not animals:
         return "<li>No animals found.</li>"
 
@@ -64,24 +41,25 @@ def write_html(content, output_file="animals.html"):
 def main():
     animal_name = input(" Which animal are you looking for? ")
 
-    animals = fetch_animals(animal_name)
+    animals = fetch_data(animal_name)
 
     if not animals:
-        print(f"No results found for '{animal_name}'. Please try another animal.")
+        print(f" No results found for '{animal_name}'")
         return
 
-    print(f"Found {len(animals)} result(s)\n")
+    print(f"Found {len(animals)} result(s)")
 
     with open("animals_template.html", "r") as file:
         template = file.read()
 
-    animals_html = generate_animals_string(animals)
+    html_block = generate_html(animals)
 
-    final_html = template.replace("__REPLACE_ANIMALS_INFO__", animals_html)
+    final_html = template.replace("__REPLACE_ANIMALS_INFO__", html_block)
 
     write_html(final_html)
 
-    print("animals.html generated successfully")
+    print(" animals.html generated successfully")
+
 
 if __name__ == "__main__":
     main()
